@@ -192,7 +192,104 @@ st.subheader("RMSE Comparison")
 
 chart_df = results_df.set_index("Model")
 
-st.bar_chart(
+# =========================
+
+# MODELING
+
+# =========================
+
+split_idx = int(len(X)*0.8)
+
+X_train = X.iloc[:split_idx]
+X_test = X.iloc[split_idx:]
+
+y_train = y.iloc[:split_idx]
+y_test = y.iloc[split_idx:]
+
+models = {
+
+```
+"Linear Regression":
+    LinearRegression(),
+
+"Decision Tree":
+    DecisionTreeRegressor(
+        random_state=42
+    ),
+
+"Random Forest":
+    RandomForestRegressor(
+        n_estimators=200,
+        random_state=42
+    ),
+
+"Extra Trees":
+    ExtraTreesRegressor(
+        n_estimators=200,
+        random_state=42
+    ),
+
+"Gradient Boosting":
+    GradientBoostingRegressor(
+        random_state=42
+    ),
+
+"AdaBoost":
+    AdaBoostRegressor(
+        random_state=42
+    )
+```
+
+}
+
+results = []
+
+for model_name, model in models.items():
+
+```
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+mae = mean_absolute_error(
+    y_test,
+    pred
+)
+
+rmse = np.sqrt(
+    mean_squared_error(
+        y_test,
+        pred
+    )
+)
+
+r2 = r2_score(
+    y_test,
+    pred
+)
+
+results.append({
+    "Model": model_name,
+    "MAE": round(mae,3),
+    "RMSE": round(rmse,3),
+    "R2": round(r2,3)
+})
+```
+
+results_df = pd.DataFrame(results)
+
+st.subheader("Model Comparison")
+
+st.dataframe(results_df)
+
+best_model = results_df.sort_values(
+"RMSE"
+).iloc[0]
+
+st.success(
+f"Best Model: {best_model['Model']}"
+)
+
     chart_df["RMSE"]
 )
 audit=pd.DataFrame({"dtype":df.dtypes.astype(str),"missing_pct":(df.isna().mean()*100)})
