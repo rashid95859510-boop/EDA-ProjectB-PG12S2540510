@@ -1,2 +1,6 @@
-# Project B
-Run: streamlit run app.py
+streamlit
+pandas
+numpy
+matplotlib
+requests
+scikit-learn
