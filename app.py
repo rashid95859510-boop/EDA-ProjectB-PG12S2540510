@@ -209,9 +209,7 @@ st.subheader("Model Comparison")
 
 st.dataframe(results_df)
 
-st.success(
-    f"Best Model: {best_model_name} | RMSE = {best_rmse:.3f}"
-)
+
 st.code("# STUDENT ADDITIONS - DASHBOARD")
 submission={"student_name":name,"student_id":sid,"has_metrics_table":isinstance(results_df,pd.DataFrame),"results_table":[] if results_df is None else results_df.to_dict(orient="records")}
 st.download_button("submission.json",json.dumps(submission,indent=2),"submission.json")
