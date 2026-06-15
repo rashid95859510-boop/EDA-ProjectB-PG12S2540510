@@ -267,7 +267,7 @@ for model_name, model in models.items():
       "RMSE": round(rmse,3),
       "R2": round(r2,3)
   })
-  ```
+  
 
 results_df = pd.DataFrame(results)
 
