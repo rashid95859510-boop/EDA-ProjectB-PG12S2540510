@@ -246,7 +246,6 @@ results = []
 
 for model_name, model in models.items():
 
-```
 model.fit(X_train, y_train)
 
 pred = model.predict(X_test)
