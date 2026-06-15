@@ -208,7 +208,7 @@ y_test = y.iloc[split_idx:]
 
 models = {
 
-```
+
 "Linear Regression":
     LinearRegression(),
 
