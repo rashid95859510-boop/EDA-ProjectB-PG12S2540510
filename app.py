@@ -99,7 +99,25 @@ d["month"] = pd.to_datetime(d[ts]).dt.month
 d["quarter"] = pd.to_datetime(d[ts]).dt.quarter
 d["y_target"]=d[target].shift(-int(h))
 feat=d.dropna()
-X=feat[["lag_1","lag_24","rolling_mean_24","hour","weekend","month"]]; y=feat["y_target"]
+X = feat[
+    [
+        "lag_1",
+        "lag_24",
+        "lag_48",
+        "lag_72",
+        "lag_168",
+        "rolling_mean_24",
+        "rolling_std_24",
+        "rolling_max_24",
+        "rolling_min_24",
+        "hour",
+        "dayofweek",
+        "weekend",
+        "month",
+        "quarter"
+    ]
+]
+y=feat["y_target"]
 st.write(feat.head())
 
 # =========================
