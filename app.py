@@ -282,8 +282,7 @@ best_model = results_df.sort_values(
 st.success(
 f"Best Model: {best_model['Model']}"
 )
-
-    chart_df["RMSE"]
+chart_df["RMSE"]
 
 audit=pd.DataFrame({"dtype":df.dtypes.astype(str),"missing_pct":(df.isna().mean()*100)})
 st.write(audit)
