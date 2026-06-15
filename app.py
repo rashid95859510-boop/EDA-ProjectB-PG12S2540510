@@ -65,7 +65,6 @@ from sklearn.metrics import (
 
 # Time-based split (important for forecasting)
 split_idx = int(len(X) * 0.8)
-
 X_train = X.iloc[:split_idx]
 X_test = X.iloc[split_idx:]
 
