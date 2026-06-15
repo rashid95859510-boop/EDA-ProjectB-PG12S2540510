@@ -62,8 +62,110 @@ d["y_target"]=d[target].shift(-int(h))
 feat=d.dropna()
 X=feat[["lag_1","lag_24","rolling_mean_24","hour","weekend","month"]]; y=feat["y_target"]
 st.write(feat.head())
-results_df=None
-st.code("# STUDENT ADDITIONS - MODELING")
+
+# =========================
+# STUDENT ADDITIONS - MODELING
+# =========================
+
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import (
+    RandomForestRegressor,
+    ExtraTreesRegressor,
+    GradientBoostingRegressor,
+    AdaBoostRegressor
+)
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_squared_error,
+    r2_score
+)
+
+# Time-based split
+split_idx = int(len(X) * 0.8)
+
+X_train = X.iloc[:split_idx]
+X_test = X.iloc[split_idx:]
+
+y_train = y.iloc[:split_idx]
+y_test = y.iloc[split_idx:]
+
+models = {
+    "Linear Regression": LinearRegression(),
+
+    "Decision Tree": DecisionTreeRegressor(
+        random_state=42
+    ),
+
+    "Random Forest": RandomForestRegressor(
+        n_estimators=200,
+        random_state=42
+    ),
+
+    "Extra Trees": ExtraTreesRegressor(
+        n_estimators=200,
+        random_state=42
+    ),
+
+    "Gradient Boosting": GradientBoostingRegressor(
+        random_state=42
+    ),
+
+    "AdaBoost": AdaBoostRegressor(
+        random_state=42
+    )
+}
+
+results = []
+
+best_rmse = float("inf")
+best_predictions = None
+best_model_name = None
+
+for model_name, model in models.items():
+
+    model.fit(X_train, y_train)
+
+    pred = model.predict(X_test)
+
+    mae = mean_absolute_error(
+        y_test,
+        pred
+    )
+
+    rmse = np.sqrt(
+        mean_squared_error(
+            y_test,
+            pred
+        )
+    )
+
+    r2 = r2_score(
+        y_test,
+        pred
+    )
+
+    results.append({
+        "Model": model_name,
+        "MAE": round(mae,3),
+        "RMSE": round(rmse,3),
+        "R2": round(r2,3)
+    })
+
+    if rmse < best_rmse:
+        best_rmse = rmse
+        best_predictions = pred
+        best_model_name = model_name
+
+results_df = pd.DataFrame(results)
+
+st.subheader("Model Comparison")
+
+st.dataframe(results_df)
+
+st.success(
+    f"Best Model: {best_model_name} | RMSE = {best_rmse:.3f}"
+)
 st.code("# STUDENT ADDITIONS - DASHBOARD")
 submission={"student_name":name,"student_id":sid,"has_metrics_table":isinstance(results_df,pd.DataFrame),"results_table":[] if results_df is None else results_df.to_dict(orient="records")}
 st.download_button("submission.json",json.dumps(submission,indent=2),"submission.json")
