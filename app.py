@@ -56,8 +56,47 @@ h=st.number_input("Horizon",1,168,24)
 d=df.copy(); d[ts]=pd.to_datetime(d[ts]); d[target]=pd.to_numeric(d[target],errors="coerce"); d=d.dropna(subset=[ts,target]).sort_values(ts)
 res=st.selectbox("Resample",["None","H","D"])
 if res!="None": d=d.set_index(ts).resample(res)[target].mean().reset_index()
-d["lag_1"]=d[target].shift(1); d["lag_24"]=d[target].shift(24); d["rolling_mean_24"]=d[target].shift(1).rolling(24).mean()
-d["hour"]=pd.to_datetime(d[ts]).dt.hour; d["weekend"]=pd.to_datetime(d[ts]).dt.dayofweek>=5; d["month"]=pd.to_datetime(d[ts]).dt.month
+d["lag_1"] = d[target].shift(1)
+d["lag_24"] = d[target].shift(24)
+
+# NEW FEATURES
+d["lag_48"] = d[target].shift(48)
+d["lag_72"] = d[target].shift(72)
+d["lag_168"] = d[target].shift(168)
+
+d["rolling_mean_24"] = (
+    d[target]
+    .shift(1)
+    .rolling(24)
+    .mean()
+)
+
+d["rolling_std_24"] = (
+    d[target]
+    .shift(1)
+    .rolling(24)
+    .std()
+)
+
+d["rolling_max_24"] = (
+    d[target]
+    .shift(1)
+    .rolling(24)
+    .max()
+)
+
+d["rolling_min_24"] = (
+    d[target]
+    .shift(1)
+    .rolling(24)
+    .min()
+)
+
+d["hour"] = pd.to_datetime(d[ts]).dt.hour
+d["dayofweek"] = pd.to_datetime(d[ts]).dt.dayofweek
+d["weekend"] = pd.to_datetime(d[ts]).dt.dayofweek >= 5
+d["month"] = pd.to_datetime(d[ts]).dt.month
+d["quarter"] = pd.to_datetime(d[ts]).dt.quarter
 d["y_target"]=d[target].shift(-int(h))
 feat=d.dropna()
 X=feat[["lag_1","lag_24","rolling_mean_24","hour","weekend","month"]]; y=feat["y_target"]
