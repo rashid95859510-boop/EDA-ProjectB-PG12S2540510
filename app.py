@@ -208,9 +208,111 @@ results_df = pd.DataFrame(results)
 st.subheader("Model Comparison")
 
 st.dataframe(results_df)
-
-
 st.code("# STUDENT ADDITIONS - DASHBOARD")
+import matplotlib.pyplot as plt
+
+st.subheader("Model Explorer")
+
+selected_model = st.selectbox(
+    "Choose Model",
+    results_df["Model"]
+)
+
+selected_pred = model_predictions[
+    selected_model
+]["predictions"]
+
+selected_row = results_df[
+    results_df["Model"] == selected_model
+].iloc[0]
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric(
+    "MAE",
+    selected_row["MAE"]
+)
+
+col2.metric(
+    "RMSE",
+    selected_row["RMSE"]
+)
+
+col3.metric(
+    "R²",
+    selected_row["R2"]
+)
+
+st.subheader("Actual vs Forecast")
+
+fig, ax = plt.subplots(figsize=(12,5))
+
+ax.plot(
+    y_test.values[:200],
+    label="Actual"
+)
+
+ax.plot(
+    selected_pred[:200],
+    label=selected_model
+)
+
+ax.legend()
+
+st.pyplot(fig)
+
+st.subheader("Residual Analysis")
+
+residuals = y_test.values - selected_pred
+
+fig, ax = plt.subplots(figsize=(10,4))
+
+ax.hist(
+    residuals,
+    bins=30
+)
+
+ax.set_title(
+    f"Residual Distribution ({selected_model})"
+)
+
+st.pyplot(fig)
+
+selected_model_obj = model_predictions[
+    selected_model
+]["model"]
+
+if hasattr(
+    selected_model_obj,
+    "feature_importances_"
+):
+
+    st.subheader(
+        "Feature Importance"
+    )
+
+    importance_df = pd.DataFrame({
+        "Feature": X.columns,
+        "Importance":
+        selected_model_obj.feature_importances_
+    })
+
+    importance_df = (
+        importance_df
+        .sort_values(
+            "Importance",
+            ascending=False
+        )
+    )
+
+    st.bar_chart(
+        importance_df.set_index(
+            "Feature"
+        )
+    )
+
+
+
 submission={"student_name":name,"student_id":sid,"has_metrics_table":isinstance(results_df,pd.DataFrame),"results_table":[] if results_df is None else results_df.to_dict(orient="records")}
 st.download_button("submission.json",json.dumps(submission,indent=2),"submission.json")
 st.download_button("project_card.md",f"# Project\nStudent: {name}","project_card.md")
