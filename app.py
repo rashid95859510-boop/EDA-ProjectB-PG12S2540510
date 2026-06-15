@@ -173,11 +173,9 @@ models = {
     )
 }
 
-results = []
+model_predictions = {}
 
-best_rmse = float("inf")
-best_predictions = None
-best_model_name = None
+results = []
 
 for model_name, model in models.items():
 
@@ -185,22 +183,18 @@ for model_name, model in models.items():
 
     pred = model.predict(X_test)
 
-    mae = mean_absolute_error(
-        y_test,
-        pred
-    )
+    model_predictions[model_name] = {
+        "model": model,
+        "predictions": pred
+    }
+
+    mae = mean_absolute_error(y_test, pred)
 
     rmse = np.sqrt(
-        mean_squared_error(
-            y_test,
-            pred
-        )
+        mean_squared_error(y_test, pred)
     )
 
-    r2 = r2_score(
-        y_test,
-        pred
-    )
+    r2 = r2_score(y_test, pred)
 
     results.append({
         "Model": model_name,
@@ -208,11 +202,6 @@ for model_name, model in models.items():
         "RMSE": round(rmse,3),
         "R2": round(r2,3)
     })
-
-    if rmse < best_rmse:
-        best_rmse = rmse
-        best_predictions = pred
-        best_model_name = model_name
 
 results_df = pd.DataFrame(results)
 
