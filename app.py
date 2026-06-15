@@ -245,35 +245,29 @@ models = {
 results = []
 
 for model_name, model in models.items():
-
-model.fit(X_train, y_train)
-
-pred = model.predict(X_test)
-
-mae = mean_absolute_error(
-    y_test,
-    pred
-)
-
-rmse = np.sqrt(
-    mean_squared_error(
-        y_test,
-        pred
-    )
-)
-
-r2 = r2_score(
-    y_test,
-    pred
-)
-
-results.append({
-    "Model": model_name,
-    "MAE": round(mae,3),
-    "RMSE": round(rmse,3),
-    "R2": round(r2,3)
-})
-```
+  model.fit(X_train, y_train)
+  pred = model.predict(X_test)
+  mae = mean_absolute_error(
+      y_test,
+      pred
+  )
+  rmse = np.sqrt(
+      mean_squared_error(
+          y_test,
+          pred
+      )
+  )
+  r2 = r2_score(
+      y_test,
+      pred
+  )
+  results.append({
+      "Model": model_name,
+      "MAE": round(mae,3),
+      "RMSE": round(rmse,3),
+      "R2": round(r2,3)
+  })
+  ```
 
 results_df = pd.DataFrame(results)
 
