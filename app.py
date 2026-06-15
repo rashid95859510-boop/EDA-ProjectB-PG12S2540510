@@ -291,7 +291,7 @@ f"Best Model: {best_model['Model']}"
 )
 
     chart_df["RMSE"]
-)
+
 audit=pd.DataFrame({"dtype":df.dtypes.astype(str),"missing_pct":(df.isna().mean()*100)})
 st.write(audit)
 ts=st.selectbox("Timestamp", df.columns, index=list(df.columns).index("DateTime") if "DateTime" in df.columns else 0)
