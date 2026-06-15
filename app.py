@@ -118,7 +118,7 @@ models = {
 
 results = []
 
- best_rmse = float("inf")
+best_rmse = float("inf")
 best_predictions = None
 best_model_name = None
 
