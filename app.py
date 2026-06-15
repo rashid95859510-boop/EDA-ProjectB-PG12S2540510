@@ -62,7 +62,7 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score
 )
-
+X = df
 # Time-based split (important for forecasting)
 split_idx = int(len(X) * 0.8)
 
