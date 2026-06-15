@@ -62,7 +62,38 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score
 )
-X = df
+# Create target column
+df["y_target"] = df[target].shift(-int(h))
+
+# Optional extra features
+df["lag_48"] = df[target].shift(48)
+df["lag_168"] = df[target].shift(168)
+
+# Remove rows with NaN values caused by shifting
+feat = df.dropna()
+
+# Create X (features)
+X = feat[
+    [
+        "lag_1",
+        "lag_24",
+        "lag_48",
+        "lag_168",
+        "rolling_mean_24",
+        "hour",
+        "weekend",
+        "month"
+    ]
+]
+
+# Create y (target)
+y = feat["y_target"]
+
+st.subheader("Feature Table")
+st.write(X.head())
+
+st.subheader("Target Variable")
+st.write(y.head())
 # Time-based split (important for forecasting)
 split_idx = int(len(X) * 0.8)
 
